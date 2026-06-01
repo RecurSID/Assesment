@@ -3,26 +3,26 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Light Theme Colors
-  static const Color lightBackground = Color(0xFFFAF7F2);
+  static const Color lightBackground = Color(0xFFF4F7FF);
   static const Color lightCardColor = Color(0xFFFFFFFF);
-  static const Color lightTextPrimary = Color(0xFF2C2C2C);
-  static const Color lightTextSecondary = Color(0xFF666666);
-  static const Color lightAccent = Color(0xFF4A4A4A);
-  static const Color lightBorder = Color(0xFFE8E8E8);
+  static const Color lightTextPrimary = Color(0xFF111827);
+  static const Color lightTextSecondary = Color(0xFF6B7280);
+  static const Color lightAccent = Color(0xFF2563EB);
+  static const Color lightBorder = Color(0xFFE5E7EB);
 
   // Dark Theme Colors
-  static const Color darkBackground = Color(0xFF1A1A1A);
-  static const Color darkCardColor = Color(0xFF2D2D2D);
-  static const Color darkTextPrimary = Color(0xFFFAF7F2);
-  static const Color darkTextSecondary = Color(0xFFB0B0B0);
-  static const Color darkAccent = Color(0xFFE0E0E0);
-  static const Color darkBorder = Color(0xFF404040);
+  static const Color darkBackground = Color(0xFF090B18);
+  static const Color darkCardColor = Color(0xFF111827);
+  static const Color darkTextPrimary = Color(0xFFF8FAFC);
+  static const Color darkTextSecondary = Color(0xFF94A3B8);
+  static const Color darkAccent = Color(0xFF60A5FA);
+  static const Color darkBorder = Color(0xFF1E293B);
 
   // Common Colors
   static const Color successColor = Color(0xFF4CAF50);
   static const Color errorColor = Color(0xFFE53935);
   static const Color warningColor = Color(0xFFFFC107);
-  static const Color ratingColor = Color(0xFFFFB800);
+  static const Color ratingColor = Color(0xFFFBBF24);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -30,6 +30,7 @@ class AppTheme {
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightBackground,
       cardColor: lightCardColor,
+      shadowColor: Colors.black.withOpacity(0.08),
       textTheme: _buildTextTheme(lightTextPrimary, lightTextSecondary),
       appBarTheme: AppBarTheme(
         backgroundColor: lightBackground,
@@ -58,26 +59,26 @@ class AppTheme {
           fontSize: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: lightBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: lightBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: lightAccent, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: lightAccent,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(14),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 14,
@@ -101,6 +102,7 @@ class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: darkBackground,
       cardColor: darkCardColor,
+      shadowColor: Colors.black.withOpacity(0.22),
       textTheme: _buildTextTheme(darkTextPrimary, darkTextSecondary),
       appBarTheme: AppBarTheme(
         backgroundColor: darkBackground,
@@ -129,26 +131,26 @@ class AppTheme {
           fontSize: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: darkBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: darkBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(18),
           borderSide: const BorderSide(color: darkAccent, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: darkAccent,
           foregroundColor: darkBackground,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(14),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 14,

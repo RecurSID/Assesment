@@ -7,14 +7,20 @@ class ApiConstants {
 
 class AppStrings {
   // General
-  static const String appTitle = 'Product Catalog';
+  static const String appTitle = 'Product Catalog Application';
   
   // Screens
-  static const String productListTitle = 'Products';
+  static const String productListTitle = 'Discover';
   static const String favoritesTitle = 'Favorites';
   static const String productDetailsTitle = 'Product Details';
   static const String homeTab = 'Home';
   static const String favoritesTab = 'Favorites';
+  static const String greetingTitle = 'Hello, User';
+  static const String greetingSubtitle = 'Find modern essentials curated for you';
+  static const String filterTitle = 'Filters';
+  static const String filterAll = 'All';
+  static const String filterCategories = 'Categories';
+  static const String filterPopular = 'Popular';
   
   // Actions
   static const String addToFavorites = 'Add to Favorites';
