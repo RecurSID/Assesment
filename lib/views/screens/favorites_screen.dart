@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import '../screens/main_screen.dart';
 import '../../controllers/favorite_controller.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
@@ -18,12 +20,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final Set<int> _selectedFavorites = {};
   bool _selectionMode = false;
 
-  void _toggleSelectionMode() {
+  void _enterSelectionMode(int productId) {
     setState(() {
-      _selectionMode = !_selectionMode;
-      if (!_selectionMode) {
-        _selectedFavorites.clear();
-      }
+      _selectionMode = true;
+      _selectedFavorites.add(productId);
+    });
+  }
+
+  void _exitSelectionMode() {
+    setState(() {
+      _selectionMode = false;
+      _selectedFavorites.clear();
     });
   }
 
@@ -34,14 +41,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       } else {
         _selectedFavorites.add(productId);
       }
-    });
-  }
-
-  void _selectAll(List<int> productIds) {
-    setState(() {
-      _selectedFavorites.clear();
-      _selectedFavorites.addAll(productIds);
-      _selectionMode = true;
     });
   }
 
@@ -58,6 +57,42 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       _selectedFavorites.clear();
       _selectionMode = false;
     });
+  }
+
+  void _confirmDeleteSelected(BuildContext context,
+      FavoriteController favoriteController) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Selected'),
+        content: Text(
+          'Delete ${_selectedFavorites.length} selected item(s)?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _removeSelected(favoriteController);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    '${_selectedFavorites.length} item(s) removed',
+                  ),
+                ),
+              );
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _confirmClearAll(BuildContext context,
@@ -103,39 +138,46 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text(AppStrings.favoritesTitle),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const MainScreen()),
+                  (route) => false,
+                );
+              },
+            ),
+            title: Text(
+              _selectionMode
+                  ? '$selectedCount selected'
+                  : AppStrings.favoritesTitle,
+            ),
             elevation: 0,
             actions: [
               if (favoriteController.hasFavorites) ...[
-                IconButton(
-                  icon: Icon(
-                    _selectionMode ? Icons.close : Icons.checklist_rtl,
-                    size: 28,
-                  ),
-                  tooltip: _selectionMode ? 'Exit selection' : 'Select items',
-                  onPressed: _toggleSelectionMode,
-                ),
                 if (_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.select_all, size: 28),
-                    tooltip: 'Select all',
-                    onPressed: () => _selectAll(
-                      favorites.map((product) => product.id).toList(),
-                    ),
+                    icon: const Icon(Icons.close, size: 26),
+                    tooltip: 'Cancel selection',
+                    onPressed: _exitSelectionMode,
                   ),
                 if (_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 28),
-                    tooltip: 'Remove selected',
+                    icon: const Icon(Icons.delete_outline, size: 26),
+                    tooltip: 'Delete selected',
                     onPressed: selectedCount > 0
-                        ? () => _removeSelected(favoriteController)
+                        ? () => _confirmDeleteSelected(
+                              context,
+                              favoriteController,
+                            )
                         : null,
                   ),
                 if (!_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 28),
+                    icon: const Icon(Icons.delete_outline, size: 26),
                     tooltip: 'Clear all favorites',
-                    onPressed: () => _confirmClearAll(context, favoriteController),
+                    onPressed: () =>
+                        _confirmClearAll(context, favoriteController),
                   ),
               ],
             ],
@@ -145,77 +187,125 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   title: AppStrings.noFavoritesFound,
                   message: 'Add products to favorites to see them here',
                   icon: Icons.favorite_outline,
+                  onBack: () => Navigator.maybePop(context),
                 )
-              : Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.5,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: favorites.length,
-                    itemBuilder: (context, index) {
-                      final product = favorites[index];
-                      final isSelected = _selectedFavorites.contains(product.id);
-
-                      return Stack(
-                        children: [
-                          ProductCard(
-                            product: product,
-                            isFavorite: true,
-                            onFavoritePressed: () {
-                              favoriteController.toggleFavorite(product);
-                              setState(() {
-                                _selectedFavorites.remove(product.id);
-                              });
-                            },
-                            onTap: () {
-                              if (_selectionMode) {
-                                _toggleSelected(product.id);
-                                return;
-                              }
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(
-                                    product: product,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          if (_selectionMode)
-                            Positioned(
-                              top: 12,
-                              left: 12,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                  .scaffoldBackgroundColor
-                                  .withAlpha(230),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? AppTheme.lightAccent
-                                        : Theme.of(context).dividerColor,
-                                    width: 2,
-                                  ),
-                                ),
-                                child: Icon(
-                                  isSelected ? Icons.check_circle : Icons.circle,
-                                  color: isSelected ? AppTheme.lightAccent : Colors.grey,
-                                  size: 28,
-                                ),
+              : Column(
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: !_selectionMode
+                          ? Padding(
+                              key: const ValueKey('hint'),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 12,
                               ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.touch_app,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      'Tap and hold a favorite to select items for removal.',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: GridView.builder(
+                          padding: const EdgeInsets.only(top: 8, bottom: 24),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.68,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemCount: favorites.length,
+                          itemBuilder: (context, index) {
+                            final product = favorites[index];
+                            final isSelected =
+                                _selectedFavorites.contains(product.id);
+
+                            return Stack(
+                              children: [
+                                ProductCard(
+                                  product: product,
+                                  isFavorite: true,
+                                  onFavoritePressed: () {
+                                    favoriteController.toggleFavorite(product);
+                                    setState(() {
+                                      _selectedFavorites.remove(product.id);
+                                    });
+                                  },
+                                  onTap: () {
+                                    if (_selectionMode) {
+                                      _toggleSelected(product.id);
+                                      return;
+                                    }
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailsScreen(
+                                          product: product,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  onLongPress: () {
+                                    if (!_selectionMode) {
+                                      _enterSelectionMode(product.id);
+                                      return;
+                                    }
+                                    _toggleSelected(product.id);
+                                  },
+                                ),
+                                if (_selectionMode)
+                                  Positioned(
+                                    top: 12,
+                                    left: 12,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .scaffoldBackgroundColor
+                                            .withAlpha(230),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? AppTheme.lightAccent
+                                              : Theme.of(context).dividerColor,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        isSelected ? Icons.check_circle : Icons.circle,
+                                        color: isSelected
+                                            ? AppTheme.lightAccent
+                                            : Colors.grey,
+                                        size: 28,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
         );
       },

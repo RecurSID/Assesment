@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/icons/huge_icons.dart';
 import '../../core/theme/app_theme.dart';
 import 'favorites_screen.dart';
 import 'product_list_screen.dart';
@@ -37,15 +38,15 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         selectedItemColor: AppTheme.lightAccent,
         unselectedItemColor: Theme.of(context).iconTheme.color,
-        iconSize: 30,
+        iconSize: 28,
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
+            icon: Icon(HugeIcons.strokeroundedHome01),
             label: AppStrings.homeTab,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(HugeIcons.strokeroundedHeart),
             label: AppStrings.favoritesTab,
           ),
         ],
