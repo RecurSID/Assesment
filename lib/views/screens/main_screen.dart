@@ -15,23 +15,27 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = [
-    ProductListScreen(),
-    FavoritesScreen(),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  void _goHome() {
+    _onItemTapped(0);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      const ProductListScreen(),
+      FavoritesScreen(onGoHome: _goHome),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

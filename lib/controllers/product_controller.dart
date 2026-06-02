@@ -25,8 +25,7 @@ class ProductController extends ChangeNotifier {
   bool get isPaginationLoading => _isPaginationLoading;
   String? get errorMessage => _errorMessage;
   bool get hasMoreProducts =>
-      _currentDisplayCount < _allProducts.length &&
-      _searchQuery.isEmpty;
+      _currentDisplayCount < _allProducts.length && _searchQuery.isEmpty;
   bool get isEmpty => _displayedProducts.isEmpty && !_isLoading;
 
   /// Initialize and fetch products
@@ -44,8 +43,7 @@ class ProductController extends ChangeNotifier {
     try {
       _allProducts = await _repository.getProducts();
       _currentDisplayCount = PaginationConstants.initialLoadCount;
-      _displayedProducts =
-          _allProducts.take(_currentDisplayCount).toList();
+      _displayedProducts = _allProducts.take(_currentDisplayCount).toList();
       _errorMessage = null;
     } catch (e) {
       _errorMessage = e.toString();
@@ -58,9 +56,7 @@ class ProductController extends ChangeNotifier {
 
   /// Load more products (pagination)
   Future<void> loadMore() async {
-    if (_isPaginationLoading ||
-        !hasMoreProducts ||
-        _searchQuery.isNotEmpty) {
+    if (_isPaginationLoading || !hasMoreProducts || _searchQuery.isNotEmpty) {
       return;
     }
 
@@ -70,15 +66,13 @@ class ProductController extends ChangeNotifier {
     // Simulate slight delay for better UX
     await Future.delayed(const Duration(milliseconds: 500));
 
-    _currentDisplayCount +=
-        PaginationConstants.loadMoreCount;
+    _currentDisplayCount += PaginationConstants.loadMoreCount;
 
     if (_currentDisplayCount > _allProducts.length) {
       _currentDisplayCount = _allProducts.length;
     }
 
-    _displayedProducts =
-        _allProducts.take(_currentDisplayCount).toList();
+    _displayedProducts = _allProducts.take(_currentDisplayCount).toList();
 
     _isPaginationLoading = false;
     notifyListeners();
@@ -89,18 +83,13 @@ class ProductController extends ChangeNotifier {
     _searchQuery = query.toLowerCase().trim();
 
     if (_searchQuery.isEmpty) {
-      _displayedProducts =
-          _allProducts.take(_currentDisplayCount).toList();
+      _displayedProducts = _allProducts.take(_currentDisplayCount).toList();
     } else {
       _displayedProducts = _allProducts
           .where((product) =>
               product.title.toLowerCase().contains(_searchQuery) ||
-              product.description
-                  .toLowerCase()
-                  .contains(_searchQuery) ||
-              product.category
-                  .toLowerCase()
-                  .contains(_searchQuery))
+              product.description.toLowerCase().contains(_searchQuery) ||
+              product.category.toLowerCase().contains(_searchQuery))
           .toList();
     }
 

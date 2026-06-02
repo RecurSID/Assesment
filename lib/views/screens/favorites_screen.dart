@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import '../screens/main_screen.dart';
 import '../../controllers/favorite_controller.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/icons/huge_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../widgets/product_card.dart';
 import '../widgets/empty_widget.dart';
+import '../widgets/home_back_button.dart';
 import 'product_details_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
-  const FavoritesScreen({Key? key}) : super(key: key);
+  final VoidCallback? onGoHome;
+
+  const FavoritesScreen({
+    Key? key,
+    this.onGoHome,
+  }) : super(key: key);
 
   @override
   State<FavoritesScreen> createState() => _FavoritesScreenState();
@@ -59,8 +64,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     });
   }
 
-  void _confirmDeleteSelected(BuildContext context,
-      FavoriteController favoriteController) {
+  void _goHome() {
+    widget.onGoHome?.call();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  void _confirmDeleteSelected(
+      BuildContext context, FavoriteController favoriteController) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -95,8 +105,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  void _confirmClearAll(BuildContext context,
-      FavoriteController favoriteController) {
+  void _confirmClearAll(
+      BuildContext context, FavoriteController favoriteController) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -138,14 +148,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const MainScreen()),
-                  (route) => false,
-                );
-              },
+            automaticallyImplyLeading: false,
+            leadingWidth: 64,
+            leading: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: HomeBackButton(onPressed: _goHome),
             ),
             title: Text(
               _selectionMode
@@ -157,13 +164,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               if (favoriteController.hasFavorites) ...[
                 if (_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.close, size: 26),
+                    icon: const Icon(HugeIcons.strokeroundedCancel01, size: 26),
                     tooltip: 'Cancel selection',
                     onPressed: _exitSelectionMode,
                   ),
                 if (_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 26),
+                    icon: const Icon(HugeIcons.strokeroundedDelete02, size: 26),
                     tooltip: 'Delete selected',
                     onPressed: selectedCount > 0
                         ? () => _confirmDeleteSelected(
@@ -174,7 +181,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   ),
                 if (!_selectionMode)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 26),
+                    icon: const Icon(HugeIcons.strokeroundedDelete02, size: 26),
                     tooltip: 'Clear all favorites',
                     onPressed: () =>
                         _confirmClearAll(context, favoriteController),
@@ -186,8 +193,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ? EmptyWidget(
                   title: AppStrings.noFavoritesFound,
                   message: 'Add products to favorites to see them here',
-                  icon: Icons.favorite_outline,
-                  onBack: () => Navigator.maybePop(context),
+                  icon: HugeIcons.strokeroundedHeart,
                 )
               : Column(
                   children: [
@@ -203,7 +209,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               child: Row(
                                 children: [
                                   const Icon(
-                                    Icons.touch_app,
+                                    HugeIcons.strokeroundedTouchInteraction,
                                     size: 18,
                                   ),
                                   const SizedBox(width: 10),
@@ -291,7 +297,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                         ),
                                       ),
                                       child: Icon(
-                                        isSelected ? Icons.check_circle : Icons.circle,
+                                        isSelected
+                                            ? HugeIcons
+                                                .strokeroundedCheckmarkCircle01
+                                            : HugeIcons.strokeroundedCircle,
                                         color: isSelected
                                             ? AppTheme.lightAccent
                                             : Colors.grey,

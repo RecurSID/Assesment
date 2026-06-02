@@ -14,7 +14,7 @@ class HttpService {
   Future<List<dynamic>> get(String endpoint) async {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
-      
+
       final response = await http.get(url).timeout(
         ApiConstants.timeoutDuration,
         onTimeout: () {

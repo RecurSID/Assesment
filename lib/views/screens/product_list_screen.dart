@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/product_controller.dart';
 import '../../controllers/favorite_controller.dart';
+import '../../controllers/theme_provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/icons/huge_icons.dart';
 import '../../core/theme/app_theme.dart';
@@ -11,6 +12,7 @@ import '../widgets/loading_widget.dart';
 import '../widgets/error_widget.dart' as app_error_widget;
 import '../widgets/empty_widget.dart';
 import 'product_details_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({Key? key}) : super(key: key);
@@ -63,11 +65,38 @@ class _ProductListScreenState extends State<ProductListScreen> {
     context.read<ProductController>().filterByCategory(query);
   }
 
+  Future<void> _refreshProducts(ProductController productController) async {
+    await productController.fetchProducts();
+
+    final selectedCategory = _categories.firstWhere(
+      (category) => category['label'] == _selectedCategory,
+      orElse: () => _categories.first,
+    );
+    final query = selectedCategory['query'] ?? '';
+    if (query.isNotEmpty) {
+      productController.filterByCategory(query);
+    }
+  }
+
+  String get _timeBasedGreeting {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning! ';
+    }
+    if (hour >= 12 && hour < 17) {
+      return 'Good Afternoon!';
+    }
+    if (hour >= 17 && hour < 21) {
+      return 'Good Evening!';
+    }
+    return 'Good Night!';
+  }
+
   void _showFilterSheet(ProductController productController) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return Padding(
@@ -84,7 +113,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     style: Theme.of(context).textTheme.displaySmall,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded),
+                    icon: const Icon(HugeIcons.strokeroundedCancel01),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -109,13 +138,17 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         return ChoiceChip(
                           label: Text(label),
                           selected: selected,
-                          selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.16),
+                          selectedColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.16),
                           labelStyle: TextStyle(
                             color: selected
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).textTheme.bodyLarge?.color,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           onSelected: (_) {
                             _applyCategory(label, query);
                             Navigator.pop(context);
@@ -131,7 +164,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       _applyCategory(AppStrings.filterAll, '');
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.refresh_rounded),
+                    icon: const Icon(HugeIcons.strokeroundedRefresh),
                   ),
                 ],
               ),
@@ -142,134 +175,192 @@ class _ProductListScreenState extends State<ProductListScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  Widget _buildHomeHeader(ProductController productController) {
+    final themeProvider = context.watch<ThemeProvider>();
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Consumer2<ProductController, FavoriteController>(
-        builder: (context, productController, favoriteController, _) {
-          if (productController.isLoading) {
-            return const LoadingWidget();
-          }
-
-          if (productController.errorMessage != null) {
-            return app_error_widget.ErrorWidget(
-              message: productController.errorMessage ?? AppStrings.errorOccurred,
-              onRetry: productController.retry,
-            );
-          }
-
-          if (productController.isEmpty && productController.displayedProducts.isEmpty) {
-            return EmptyWidget(
-              title: AppStrings.noProductsFound,
-              message: 'Unable to load products at the moment',
-              icon: Icons.shopping_bag_outlined,
-              onBack: () => Navigator.maybePop(context),
-            );
-          }
-
-          if (productController.displayedProducts.isEmpty) {
-            return EmptyWidget(
-              title: AppStrings.noMatchingProducts,
-              message: 'Try a different search term',
-              icon: Icons.search_off,
-              onBack: () => Navigator.maybePop(context),
-            );
-          }
-
-          return SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hello',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.8),
-                              ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'User',
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                fontSize: 34,
-                                fontWeight: FontWeight.w700,
-                              ),
-                        ),
-                      ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeOutCubic,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).shadowColor.withOpacity(0.08),
+                      blurRadius: 22,
+                      offset: const Offset(0, 8),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                        children: [
-                          Expanded(
-                            child: SearchBarWidget(
-                              onChanged: (query) {
-                                context.read<ProductController>().search(query);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Material(
-                            color: Theme.of(context).cardColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            elevation: 2,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(18),
-                              onTap: () => _showFilterSheet(productController),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14),
-                                child: Icon(
-                                  HugeIcons.strokeroundedFilter,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                  ],
+                ),
+                child: IconButton(
+                  splashRadius: 24,
+                  padding: const EdgeInsets.all(14),
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 350),
+                    transitionBuilder: (child, animation) {
+                      return RotationTransition(
+                        turns: Tween<double>(begin: 0.8, end: 1)
+                            .animate(animation),
+                        child: FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                    child: Icon(
+                      themeProvider.isDarkMode
+                          ? HugeIcons.strokeroundedMoon02
+                          : HugeIcons.strokeroundedSun03,
+                      key: ValueKey<bool>(themeProvider.isDarkMode),
+                      color: themeProvider.isDarkMode
+                          ? Theme.of(context).colorScheme.primary
+                          : Colors.orange.shade600,
+                      size: 22,
+                    ),
+                  ),
+                  onPressed: themeProvider.toggleTheme,
+                  tooltip: themeProvider.isDarkMode
+                      ? 'Switch to Light Mode'
+                      : 'Switch to Dark Mode',
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  'Product Catalog Application',
+                  style: GoogleFonts.lato(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: SearchBarWidget(
+                  onChanged: (query) {
+                    context.read<ProductController>().search(query);
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Material(
+                color: Theme.of(context).cardColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                elevation: 2,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(14),
+                  onTap: () => _showFilterSheet(productController),
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Icon(
+                      HugeIcons.strokeroundedFilter,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<ProductController, FavoriteController>(
+      builder: (context, productController, favoriteController, _) {
+        Widget body;
+
+        if (productController.isLoading) {
+          body = const LoadingWidget();
+        } else if (productController.errorMessage != null) {
+          body = app_error_widget.ErrorWidget(
+            message: productController.errorMessage ?? AppStrings.errorOccurred,
+            onRetry: productController.retry,
+          );
+        } else if (productController.isEmpty &&
+            productController.displayedProducts.isEmpty) {
+          body = SafeArea(
+            child: Column(
+              children: [
+                _buildHomeHeader(productController),
+                Expanded(
+                  child: EmptyWidget(
+                    title: AppStrings.noProductsFound,
+                    message: 'Unable to load products at the moment',
+                    icon: HugeIcons.strokeroundedShoppingBag01,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (productController.displayedProducts.isEmpty) {
+          body = SafeArea(
+            child: Column(
+              children: [
+                _buildHomeHeader(productController),
+                Expanded(
+                  child: EmptyWidget(
+                    title: AppStrings.noMatchingProducts,
+                    message: 'Try a different search term',
+                    icon: HugeIcons.strokeroundedSearchRemove,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+          body = SafeArea(
+            child: Column(
+              children: [
+                _buildHomeHeader(productController),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: productController.fetchProducts,
+                    onRefresh: () => _refreshProducts(productController),
                     child: GridView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: productController.displayedProducts.length +
                           (productController.isPaginationLoading ? 1 : 0),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.67,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
                       ),
                       itemBuilder: (context, index) {
-                        if (index == productController.displayedProducts.length) {
+                        if (index ==
+                            productController.displayedProducts.length) {
                           return Center(
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                isDarkMode ? AppTheme.darkAccent : AppTheme.lightAccent,
+                                isDarkMode
+                                    ? AppTheme.darkAccent
+                                    : AppTheme.lightAccent,
                               ),
                             ),
                           );
                         }
 
-                        final product = productController.displayedProducts[index];
-                        final isFavorite = favoriteController.isFavorite(product.id);
+                        final product =
+                            productController.displayedProducts[index];
+                        final isFavorite =
+                            favoriteController.isFavorite(product.id);
 
                         return ProductCard(
                           product: product,
@@ -281,7 +372,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProductDetailsScreen(product: product),
+                                builder: (context) =>
+                                    ProductDetailsScreen(product: product),
                               ),
                             );
                           },
@@ -293,8 +385,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ],
             ),
           );
-        },
-      ),
+        }
+
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: body,
+        );
+      },
     );
   }
 }

@@ -6,8 +6,6 @@ class ApiConstants {
 }
 
 class AppStrings {
-  static const String appTitle = 'Product Catalog Application';
-
   static const String favoritesTitle = 'Favorites';
   static const String homeTab = 'Home';
   static const String favoritesTab = 'Favorites';
