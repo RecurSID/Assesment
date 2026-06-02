@@ -35,8 +35,8 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: lightBackground,
         elevation: 0,
-        centerTitle: true,
-        titleTextStyle: GoogleFonts.poppins(
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.lato(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: lightTextPrimary,
@@ -54,23 +54,24 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         fillColor: lightCardColor,
         filled: true,
-        hintStyle: GoogleFonts.poppins(
+        hintStyle: GoogleFonts.lato(
           color: lightTextSecondary,
           fontSize: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: lightBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: lightBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: lightAccent, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -78,9 +79,9 @@ class AppTheme {
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(12),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.lato(
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -107,8 +108,8 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: darkBackground,
         elevation: 0,
-        centerTitle: true,
-        titleTextStyle: GoogleFonts.poppins(
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.lato(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
@@ -126,23 +127,24 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         fillColor: darkCardColor,
         filled: true,
-        hintStyle: GoogleFonts.poppins(
+        hintStyle: GoogleFonts.lato(
           color: darkTextSecondary,
           fontSize: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: darkBorder),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: darkBorder),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: darkAccent, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -150,9 +152,9 @@ class AppTheme {
           foregroundColor: darkBackground,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(12),
           ),
-          textStyle: GoogleFonts.poppins(
+          textStyle: GoogleFonts.lato(
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -170,72 +172,72 @@ class AppTheme {
 
   static TextTheme _buildTextTheme(Color primary, Color secondary) {
     return TextTheme(
-      displayLarge: GoogleFonts.poppins(
+      displayLarge: GoogleFonts.lato(
         fontSize: 32,
         fontWeight: FontWeight.w700,
         color: primary,
       ),
-      displayMedium: GoogleFonts.poppins(
+      displayMedium: GoogleFonts.lato(
         fontSize: 28,
         fontWeight: FontWeight.w700,
         color: primary,
       ),
-      displaySmall: GoogleFonts.poppins(
+      displaySmall: GoogleFonts.lato(
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: primary,
       ),
-      headlineMedium: GoogleFonts.poppins(
+      headlineMedium: GoogleFonts.lato(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: primary,
       ),
-      headlineSmall: GoogleFonts.poppins(
+      headlineSmall: GoogleFonts.lato(
         fontSize: 18,
         fontWeight: FontWeight.w600,
         color: primary,
       ),
-      titleLarge: GoogleFonts.poppins(
+      titleLarge: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: primary,
       ),
-      titleMedium: GoogleFonts.poppins(
+      titleMedium: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: primary,
       ),
-      titleSmall: GoogleFonts.poppins(
+      titleSmall: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w600,
         color: primary,
       ),
-      bodyLarge: GoogleFonts.poppins(
+      bodyLarge: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: primary,
       ),
-      bodyMedium: GoogleFonts.poppins(
+      bodyMedium: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: primary,
       ),
-      bodySmall: GoogleFonts.poppins(
+      bodySmall: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: secondary,
       ),
-      labelLarge: GoogleFonts.poppins(
+      labelLarge: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: primary,
       ),
-      labelMedium: GoogleFonts.poppins(
+      labelMedium: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: primary,
       ),
-      labelSmall: GoogleFonts.poppins(
+      labelSmall: GoogleFonts.lato(
         fontSize: 10,
         fontWeight: FontWeight.w500,
         color: secondary,

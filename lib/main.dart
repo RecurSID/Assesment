@@ -14,11 +14,9 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('productCache');
 
-  // Initialize theme provider
   final themeProvider = ThemeProvider();
   await themeProvider.init();
 
-  // Initialize favorite controller
   final favoriteController = FavoriteController();
   await favoriteController.init();
 
@@ -43,8 +41,7 @@ void main() async {
 }
 
 class ProductCatalogApp extends StatelessWidget {
-  const ProductCatalogApp({Key? key})
-      : super(key: key);
+  const ProductCatalogApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +54,6 @@ class ProductCatalogApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
           debugShowCheckedModeBanner: false,
           home: const MainScreen(),
-          navigatorObservers: [
-            NavigatorObserver(),
-          ],
         );
       },
     );

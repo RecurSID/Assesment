@@ -30,7 +30,7 @@ class ThemeProvider extends ChangeNotifier {
   Future<void> toggleTheme() async {
     _themeMode =
         _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    
+
     await _prefs.setBool(_themeKey, _themeMode == ThemeMode.dark);
     notifyListeners();
   }
