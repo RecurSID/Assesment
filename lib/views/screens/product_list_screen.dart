@@ -186,6 +186,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                'Product Catalog Application',
+                style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 350),
                 curve: Curves.easeOutCubic,
@@ -227,16 +235,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   tooltip: themeProvider.isDarkMode
                       ? 'Switch to Light Mode'
                       : 'Switch to Dark Mode',
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Text(
-                  'Product Catalog Application',
-                  style: GoogleFonts.lato(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
                 ),
               ),
             ],

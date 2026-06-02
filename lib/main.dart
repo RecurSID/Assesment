@@ -48,7 +48,7 @@ class ProductCatalogApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, _) {
         return MaterialApp(
-          title: AppStrings.appTitle,
+          //title: AppStrings.appTitle,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
