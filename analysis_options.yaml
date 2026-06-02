@@ -1,0 +1,4 @@
+# Analyzer configuration for the Product Catalog project.
+# Only the Flutter recommended lint set is enabled here.
+
+include: package:flutter_lints/flutter.yaml
