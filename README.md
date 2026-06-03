@@ -70,37 +70,7 @@ The application follows an enhanced **MVC (Model-View-Controller)** pattern comb
 │         External API & Resources            │
 └─────────────────────────────────────────────┘
 ```
-
-### SOLID Principles Implementation
-
-**Single Responsibility:**
-- ProductController manages product state only
-- FavoriteController handles favorites exclusively
-- ProductRepository abstracts all data operations
-- Each widget has a focused purpose
-
-**Open/Closed:**
-- Easy to extend with new features
-- Controllers can be subclassed for customization
-- Repository can swap data sources
-
-**Liskov Substitution:**
-- Controllers can be mocked for testing
-- Repositories can use different implementations
-- Widgets are fully reusable
-
-**Interface Segregation:**
-- Clean, focused interfaces
-- No "fat" controller methods
-- Only necessary methods exposed
-
-**Dependency Inversion:**
-- Depend on abstractions (HttpService, Repository)
-- Dependencies injected for testability
-- No tight coupling
-
 ---
-
 ## Features
 
 ### 1. Product Listing
@@ -573,64 +543,6 @@ class Rating {
 
 ---
 
-## Code Quality
-
-### Quality Standards
-
-**Strong Typing**
-- Null safety enabled (`--enable-null-safety`)
-- No `dynamic` types
-- Proper type annotations
-
-**Code Style**
-- Consistent formatting via `flutter format`
-- Meaningful variable/method names
-- Comments explain "why", not "what"
-
-**Error Handling**
-- Try-catch blocks on async operations
-- Proper exception propagation
-- User-friendly error messages
-
-**Performance**
-- `ListView.builder` for lists
-- Image caching with `CachedNetworkImage`
-- Debounced search
-- Efficient pagination
-- Targeted widget rebuilds
-
-**Architecture**
-- MVC + Repository pattern
-- Dependency injection
-- Clear separation of concerns
-- Testable design
-
-### Best Practices Implemented
-
-- Avoid nested Futures (use async-await)
-- Dispose resources properly
-- Use const constructors
-- Prefer composition over inheritance
-- DRY (Don't Repeat Yourself)
-- Meaningful names over comments
-- Single responsibility per class
-- No magic numbers (use constants)
-
-### Build Quality Checks
-
-```bash
-# Analyze code
-flutter analyze
-
-# Format code
-flutter format lib/
-
-# Run linter
-flutter pub list-outdated
-```
-
----
-
 ## Privacy & Security
 
 - No user data collection
@@ -638,35 +550,6 @@ flutter pub list-outdated
 - Local storage only for preferences
 - No sensitive information stored
 - HTTPS for all API calls
-
----
-
-## Future Enhancements
-
-### Short Term (Immediate)
-- [ ] Unit tests for controllers
-- [ ] Widget tests for UI components
-- [ ] Product filtering by category
-- [ ] Sorting options (price, rating)
-- [ ] Loading skeleton screens
-- [ ] Improved error messages
-
-### Medium Term (Next Phase)
-- [ ] User authentication
-- [ ] Shopping cart functionality
-- [ ] Order history
-- [ ] Product reviews & ratings
-- [ ] Wishlist management
-- [ ] Payment integration (Stripe)
-
-### Long Term (Advanced)
-- [ ] Offline mode support
-- [ ] Database integration (Hive/SQLite)
-- [ ] Push notifications
-- [ ] User account sync
-- [ ] Advanced analytics
-- [ ] Recommendation engine
-- [ ] AR product preview
 
 ---
 
@@ -682,70 +565,6 @@ flutter pub list-outdated
 | ListView.builder | Only render visible items | Smooth scrolling |
 | Consumer Widgets | Targeted rebuilds | Fewer rebuilds |
 | Const Constructors | Throughout widgets | Compilation optimization |
-
----
-
-## Code Examples
-
-### Using ProductController
-
-```dart
-// Initialize products
-context.read<ProductController>().init();
-
-// Search products
-context.read<ProductController>().search('backpack');
-
-// Load more products
-context.read<ProductController>().loadMore();
-
-// Retry on failure
-context.read<ProductController>().retry();
-
-// Watch state changes
-Consumer<ProductController>(
-  builder: (context, controller, child) {
-    if (controller.isLoading) return LoadingWidget();
-    if (controller.error != null) return ErrorWidget();
-    return ListView.builder(
-      itemCount: controller.displayedProducts.length,
-      itemBuilder: (context, index) {
-        return ProductCard(controller.displayedProducts[index]);
-      },
-    );
-  },
-);
-```
-
-### Using FavoriteController
-
-```dart
-// Toggle favorite
-favoriteController.toggleFavorite(product);
-
-// Check if favorite
-bool isFav = favoriteController.isFavorite(product.id);
-
-// Get all favorites
-List<int> favIds = favoriteController.favoriteIds;
-
-// Clear all favorites
-await favoriteController.clearAllFavorites();
-```
-
-### Using ThemeProvider
-
-```dart
-// Toggle theme
-context.read<ThemeProvider>().toggleTheme();
-
-// Check dark mode
-bool isDark = context.watch<ThemeProvider>().isDarkMode;
-
-// Set specific theme
-await context.read<ThemeProvider>()
-    .setThemeMode(ThemeMode.dark);
-```
 
 ---
 
