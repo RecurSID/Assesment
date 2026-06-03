@@ -14,8 +14,7 @@ A production-grade Flutter application demonstrating professional mobile develop
 - [State Management](#state-management)
 - [API Integration](#api-integration)
 - [Data Persistence](#data-persistence)
-- [Code Quality](#code-quality)
-- [Future Enhancements](#future-enhancements)
+
 
 ---
 
